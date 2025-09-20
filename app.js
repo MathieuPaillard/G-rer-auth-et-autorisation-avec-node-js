@@ -2,7 +2,13 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
+
+
+async function validatePassword(user,password){
+    return await bcrypt.compare(password,user.password);
+}
 
 
 const app = express();
@@ -10,8 +16,8 @@ app.use(express.json());
 
 // --- Utilisateurs simulés ---
 const users = [
-    { id: 1, username: "admin", password: "admin", role: "admin" },
-    { id: 2, username: "user", password: "user", role: "user" }
+    { id: 1, username: "admin", password: "$2b$10$Ne3lZ05ptMmfG1N5/tGit.8ndLPlX2f69.S3RCoiwfJM2zlOu40e.", role: "admin" },
+    { id: 2, username: "user", password: "$2b$10$Wr3wu2/MyVqo.IF1GDHsOOtJRk7M9uS..p.0turx.CYO5TE06I66i", role: "user" }
 ];
 
 // --- Fonctions utilitaires ---
@@ -25,10 +31,11 @@ function validatePassword(user, password) {
 
 // --- Configurer Passport ---
 passport.use(new LocalStrategy(
-    function (username, password, done) {
+    async function (username, password, done) {
         const user = findUserByUsername(username);
         if (!user) return done(null, false, { message: 'Incorrect username.' });
-        if (!validatePassword(user, password)) return done(null, false, { message: 'Incorrect password.' });
+        const valid = await validatePassword(user,password);
+        if (!valid) return done(null, false, { message: 'Incorrect password.' });
         return done(null, user);
     }
 ));

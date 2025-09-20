@@ -18,6 +18,6 @@ async function checkPassword(plainPassword, hashedPassword){
 }
 
 
-hashPassword("12/07/1984")
-const hash = "$2b$15$4oy/rE5IaNEePZQPjT3mgOejZ006dV37a2OUqt/yQTSk/rzATanFC";
-checkPassword("12/07/1984",hash)
+hashPassword("user")
+//const hash = "$2b$15$4oy/rE5IaNEePZQPjT3mgOejZ006dV37a2OUqt/yQTSk/rzATanFC";
+//checkPassword("12/07/1984",hash)

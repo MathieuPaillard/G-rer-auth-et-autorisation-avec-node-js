@@ -18,6 +18,10 @@ async function checkPassword(plainPassword, hashedPassword){
 }
 
 
-hashPassword("user")
-//const hash = "$2b$15$4oy/rE5IaNEePZQPjT3mgOejZ006dV37a2OUqt/yQTSk/rzATanFC";
-//checkPassword("12/07/1984",hash)
+hashPassword("admin")
+const hash = "$2b$10$Ne3lZ05ptMmfG1N5/tGit.8ndLPlX2f69.S3RCoiwfJM2zlOu40e.";
+//$2b$20$c3N9dBVXvf8.LSk6172bvufku/aybDOUQm7Tps01Y/PDEUy7L9w9G
+//$2b$15$zdDQpUqy4kg/HcE4s5Jrkuk2N2gG9HXls9az0tzmN7AWe.jYaVEKe
+//$2b$04$4j2esITs7r3Xs2FnDC028un6lvRUpcrOzmZlChz34Krq0q7MUe12.
+//$2b$04$XW/uDKsMRx6wzxLnITZmdOOkRvgVw0EfwcD.G0LNXN7/9K87rPTOK
+checkPassword("admin",hash)

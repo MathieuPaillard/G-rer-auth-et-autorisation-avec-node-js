@@ -2,13 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 require('dotenv').config();
-
-
-async function validatePassword(user,password){
-    return await bcrypt.compare(password,user.password);
-}
 
 
 const app = express();
@@ -16,29 +10,36 @@ app.use(express.json());
 
 // --- Utilisateurs simulés ---
 const users = [
-    { id: 1, username: "admin", password: "$2b$10$Ne3lZ05ptMmfG1N5/tGit.8ndLPlX2f69.S3RCoiwfJM2zlOu40e.", role: "admin" },
-    { id: 2, username: "user", password: "$2b$10$Wr3wu2/MyVqo.IF1GDHsOOtJRk7M9uS..p.0turx.CYO5TE06I66i", role: "user" }
+  { id: 1, username: "admin", password: "$2b$10$Ne3lZ05ptMmfG1N5/tGit.8ndLPlX2f69.S3RCoiwfJM2zlOu40e.", role: "admin" },
+  { id: 2, username: "user", password: "$2b$10$xyz456...", role: "user" }
 ];
+
 
 // --- Fonctions utilitaires ---
 function findUserByUsername(username) {
     return users.find(user => user.username === username);
 }
 
-function validatePassword(user, password) {
-    return user.password === password;
+const bcrypt = require('bcrypt');
+
+async function validatePassword(user, password) {
+  return await bcrypt.compare(password, user.password);
 }
+
 
 // --- Configurer Passport ---
 passport.use(new LocalStrategy(
-    async function (username, password, done) {
-        const user = findUserByUsername(username);
-        if (!user) return done(null, false, { message: 'Incorrect username.' });
-        const valid = await validatePassword(user,password);
-        if (!valid) return done(null, false, { message: 'Incorrect password.' });
-        return done(null, user);
-    }
+  async function (username, password, done) {
+    const user = findUserByUsername(username);
+    if (!user) return done(null, false, { message: 'Incorrect username.' });
+
+    const valid = await validatePassword(user, password);
+    if (!valid) return done(null, false, { message: 'Incorrect password.' });
+
+    return done(null, user);
+  }
 ));
+
 
 // --- Middleware JWT ---
 function authenticateToken(req, res, next) {
